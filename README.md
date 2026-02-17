@@ -2,28 +2,26 @@
 
 ## Introduction
 
-The masterminds at CalcTek have decided to revolutionize the calculator industry by building an API-driven calculator. Genius! They've tasked you with developing the project.
-
 This is a tech demo showcasing a Laravel-based backend API with a Vue.js frontend calculator interface.
 
-## Requirements
+## Project Overview
 
-Build an API that supports four types of calculation operators:
+The application centers on an API that performs four core arithmetic operations:
 
 - Addition
 - Subtraction
 - Division
 - Multiplication
 
-Every calculation should be stored for historical reference.
+Each calculation is persisted so previous results are available as historical records.
 
-A calculator interface should be created (Vue.js) that allows the user to enter their calculation and receive a response.
+A Vue.js calculator interface provides input, submits expressions to the API, and renders the returned result.
 
-A "ticker tape" interface should be built that shows all previous calculations with the ability to delete an individual calculation or clear all previous calculations.
+A ticker-tape style history view displays prior calculations and supports both single-entry deletion and full history clearing.
 
 ## Stretch Goal
 
-To really impress the customers of CalcTek, your calculator should support more complex calculation chains and even additional calculation operators:
+The extended capability includes support for more complex calculation chains and additional operators, for example:
 
 `sqrt((((9*9)/12)+(13-4))*2)^2`
 
@@ -34,56 +32,20 @@ To really impress the customers of CalcTek, your calculator should support more 
 - **Database**: SQLite (for simplicity in demo)
 - **Testing**: Pest/PHPUnit
 
-## Installation
+## Environment and Setup
 
-1. Clone the repository:
-   ```bash
-   git clone <repository-url>
-   cd CalcTeck-Calculator
-   ```
+The repository is designed to run in a standard Laravel + Vite development environment.
 
-2. Install PHP dependencies:
-   ```bash
-   composer install
-   ```
+Typical setup includes PHP dependency installation with Composer, JavaScript dependency installation with npm, Laravel environment initialization, database migration, and frontend asset compilation through Vite.
 
-3. Install Node.js dependencies:
-   ```bash
-   npm install
-   ```
-
-4. Set up environment:
-   ```bash
-   cp .env.example .env
-   php artisan key:generate
-   ```
-
-5. Run database migrations:
-   ```bash
-   php artisan migrate
-   ```
-
-6. Build frontend assets:
-   ```bash
-   npm run build
-   ```
-
-7. Start the development server:
-   ```bash
-   php artisan serve
-   ```
-
-8. In another terminal, start the frontend dev server:
-   ```bash
-   npm run dev
-   ```
+The application is commonly served through Laravel's local server tooling with Vite running for frontend development.
 
 ## API Endpoints
 
-- `POST /api/calculate` - Perform a calculation
-- `GET /api/history` - Get calculation history
-- `DELETE /api/history/{id}` - Delete a specific calculation
-- `DELETE /api/history` - Clear all calculations
+- `POST /api/calculate` - Performs a calculation request
+- `GET /api/history` - Returns calculation history
+- `DELETE /api/history/{id}` - Deletes a specific history item
+- `DELETE /api/history` - Clears all stored calculations
 
 ## Features
 
@@ -96,11 +58,7 @@ To really impress the customers of CalcTek, your calculator should support more 
 
 ## Testing
 
-Run the test suite:
-
-```bash
-php artisan test
-```
+Automated tests are provided through Pest/PHPUnit to validate API behavior and application functionality.
 
 ## License
 
