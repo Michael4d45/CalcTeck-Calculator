@@ -74,7 +74,7 @@ class Calculator
 
     private function safeDivide(float $left, float $right): float
     {
-        if ($right == 0.0) {
+        if ($right === 0.0) {
             throw new InvalidArgumentException(
                 'Division by zero is not allowed.',
             );

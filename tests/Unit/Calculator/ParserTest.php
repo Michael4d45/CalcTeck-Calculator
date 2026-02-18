@@ -10,7 +10,7 @@ use App\Services\Calculator\Lexer;
 use App\Services\Calculator\Parser;
 use App\Services\Calculator\TokenType;
 
-function parseExpression(string $expression)
+function parse_expression(string $expression)
 {
     $lexer = new Lexer;
     $parser = new Parser($lexer->tokenize($expression));
@@ -19,19 +19,22 @@ function parseExpression(string $expression)
 }
 
 it('parses operator precedence correctly', function () {
-    $ast = parseExpression('1 + 2 * 3');
+    $ast = parse_expression('1 + 2 * 3');
 
     expect($ast)->toBeInstanceOf(BinaryOpNode::class);
 
-    if (!($ast instanceof BinaryOpNode)) {
+    if (!$ast instanceof BinaryOpNode) {
         return;
     }
 
-    expect($ast->operator)->toBe(TokenType::PLUS)
-        ->and($ast->left)->toBeInstanceOf(NumberNode::class)
-        ->and($ast->right)->toBeInstanceOf(BinaryOpNode::class);
+    expect($ast->operator)
+        ->toBe(TokenType::PLUS)
+        ->and($ast->left)
+        ->toBeInstanceOf(NumberNode::class)
+        ->and($ast->right)
+        ->toBeInstanceOf(BinaryOpNode::class);
 
-    if (!($ast->right instanceof BinaryOpNode)) {
+    if (!$ast->right instanceof BinaryOpNode) {
         return;
     }
 
@@ -39,18 +42,20 @@ it('parses operator precedence correctly', function () {
 });
 
 it('parses power as right associative', function () {
-    $ast = parseExpression('2^3^2');
+    $ast = parse_expression('2^3^2');
 
     expect($ast)->toBeInstanceOf(BinaryOpNode::class);
 
-    if (!($ast instanceof BinaryOpNode)) {
+    if (!$ast instanceof BinaryOpNode) {
         return;
     }
 
-    expect($ast->operator)->toBe(TokenType::POWER)
-        ->and($ast->right)->toBeInstanceOf(BinaryOpNode::class);
+    expect($ast->operator)
+        ->toBe(TokenType::POWER)
+        ->and($ast->right)
+        ->toBeInstanceOf(BinaryOpNode::class);
 
-    if (!($ast->right instanceof BinaryOpNode)) {
+    if (!$ast->right instanceof BinaryOpNode) {
         return;
     }
 
@@ -58,18 +63,20 @@ it('parses power as right associative', function () {
 });
 
 it('parses unary expression and grouped expression', function () {
-    $ast = parseExpression('-(1+2)');
+    $ast = parse_expression('-(1+2)');
 
     expect($ast)->toBeInstanceOf(UnaryOpNode::class);
 
-    if (!($ast instanceof UnaryOpNode)) {
+    if (!$ast instanceof UnaryOpNode) {
         return;
     }
 
-    expect($ast->operator)->toBe(TokenType::MINUS)
-        ->and($ast->operand)->toBeInstanceOf(BinaryOpNode::class);
+    expect($ast->operator)
+        ->toBe(TokenType::MINUS)
+        ->and($ast->operand)
+        ->toBeInstanceOf(BinaryOpNode::class);
 
-    if (!($ast->operand instanceof BinaryOpNode)) {
+    if (!$ast->operand instanceof BinaryOpNode) {
         return;
     }
 
@@ -77,18 +84,20 @@ it('parses unary expression and grouped expression', function () {
 });
 
 it('parses function call expression', function () {
-    $ast = parseExpression('sqrt(9)');
+    $ast = parse_expression('sqrt(9)');
 
     expect($ast)->toBeInstanceOf(FunctionCallNode::class);
 
-    if (!($ast instanceof FunctionCallNode)) {
+    if (!$ast instanceof FunctionCallNode) {
         return;
     }
 
-    expect($ast->name)->toBe('sqrt')
-        ->and($ast->argument)->toBeInstanceOf(NumberNode::class);
+    expect($ast->name)
+        ->toBe('sqrt')
+        ->and($ast->argument)
+        ->toBeInstanceOf(NumberNode::class);
 
-    if (!($ast->argument instanceof NumberNode)) {
+    if (!$ast->argument instanceof NumberNode) {
         return;
     }
 
@@ -96,11 +105,14 @@ it('parses function call expression', function () {
 });
 
 it('throws for trailing tokens', function () {
-    expect(fn () => parseExpression('1 2'))
-        ->toThrow(\InvalidArgumentException::class, 'Unexpected trailing tokens');
+    expect(fn() => parse_expression('1 2'))
+        ->toThrow(
+            \InvalidArgumentException::class,
+            'Unexpected trailing tokens',
+        );
 });
 
 it('throws when grouped expression is not closed', function () {
-    expect(fn () => parseExpression('(1 + 2'))
+    expect(fn() => parse_expression('(1 + 2'))
         ->toThrow(\InvalidArgumentException::class, 'Expected token');
 });
