@@ -3,9 +3,6 @@
 declare(strict_types=1);
 
 use App\Models\CalculationHistory;
-use Illuminate\Foundation\Testing\RefreshDatabase;
-
-uses(RefreshDatabase::class);
 
 it('calculates an expression and stores it in history', function () {
     $response = \Pest\Laravel\postJson('/api/calculate', [

@@ -3,9 +3,6 @@
 declare(strict_types=1);
 
 use App\Models\CalculationHistory;
-use Illuminate\Foundation\Testing\RefreshDatabase;
-
-uses(RefreshDatabase::class);
 
 it('returns history using cursor pagination', function () {
     CalculationHistory::query()->create([
