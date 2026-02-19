@@ -42,6 +42,6 @@ it('throws on sqrt of negative number', function () {
 it('throws on unsupported function', function () {
     $calculator = new Calculator;
 
-    expect(fn() => $calculator->calculate('sin(1)'))
+    expect(fn() => $calculator->calculate('fake(1)'))
         ->toThrow(\InvalidArgumentException::class, 'Unsupported function');
 });

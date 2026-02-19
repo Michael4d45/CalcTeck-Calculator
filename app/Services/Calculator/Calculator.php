@@ -63,6 +63,13 @@ class Calculator
 
             return match (strtolower($node->name)) {
                 'sqrt' => $this->safeSqrt($argument),
+                'sin' => sin($argument),
+                'cos' => cos($argument),
+                'tan' => tan($argument),
+                'log' => $this->safeLog10($argument),
+                'ln' => $this->safeLn($argument),
+                'abs' => abs($argument),
+                'exp' => exp($argument),
                 default => throw new InvalidArgumentException(
                     "Unsupported function '{$node->name}'.",
                 ),
@@ -92,5 +99,27 @@ class Calculator
         }
 
         return sqrt($value);
+    }
+
+    private function safeLog10(float $value): float
+    {
+        if ($value <= 0.0) {
+            throw new InvalidArgumentException(
+                'Logarithm of non-positive number is not allowed.',
+            );
+        }
+
+        return log10($value);
+    }
+
+    private function safeLn(float $value): float
+    {
+        if ($value <= 0.0) {
+            throw new InvalidArgumentException(
+                'Natural logarithm of non-positive number is not allowed.',
+            );
+        }
+
+        return log($value);
     }
 }
