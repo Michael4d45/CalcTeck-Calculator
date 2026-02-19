@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 use App\Models\CalculationHistory;
 
-it('returns history using cursor pagination', function () {
+it('returns history without pagination', function () {
     CalculationHistory::query()->create([
         'expression' => '1+1',
         'result' => 2,
@@ -26,46 +26,18 @@ it('returns history using cursor pagination', function () {
         'result' => 10,
     ]);
 
-    $firstPage = \Pest\Laravel\getJson('/api/history?per_page=2');
+    $response = \Pest\Laravel\getJson('/api/history');
 
-    $firstPage
+    $response
         ->assertOk()
         ->assertJsonStructure([
             'data',
-            'meta' => ['path', 'per_page', 'next_cursor', 'prev_cursor'],
+            'meta' => ['count'],
         ])
-        ->assertJsonCount(2, 'data')
-        ->assertJsonPath('meta.per_page', 2)
+        ->assertJsonCount(5, 'data')
         ->assertJsonPath('data.0.expression', '5+5')
-        ->assertJsonPath('data.1.expression', '4+4');
-
-    $nextCursor = $firstPage->json('meta.next_cursor');
-
-    expect($nextCursor)->not->toBeNull();
-
-    $secondPage = \Pest\Laravel\getJson(
-        '/api/history?per_page=2&cursor=' . urlencode((string) $nextCursor),
-    );
-
-    $secondPage
-        ->assertOk()
-        ->assertJsonCount(2, 'data')
-        ->assertJsonPath('data.0.expression', '3+3')
-        ->assertJsonPath('data.1.expression', '2+2');
-
-    $thirdCursor = $secondPage->json('meta.next_cursor');
-
-    expect($thirdCursor)->not->toBeNull();
-
-    $thirdPage = \Pest\Laravel\getJson(
-        '/api/history?per_page=2&cursor=' . urlencode((string) $thirdCursor),
-    );
-
-    $thirdPage
-        ->assertOk()
-        ->assertJsonCount(1, 'data')
-        ->assertJsonPath('data.0.expression', '1+1')
-        ->assertJsonPath('meta.next_cursor', null);
+        ->assertJsonPath('data.4.expression', '1+1')
+        ->assertJsonPath('meta.count', 5);
 });
 
 it('deletes one history item', function () {
@@ -84,7 +56,10 @@ it('deletes one history item', function () {
 it('returns 404 when deleting non-existing history item', function () {
     \Pest\Laravel\deleteJson('/api/history/99999')
         ->assertStatus(404)
-        ->assertJsonPath('message', 'No query results for model [App\Models\CalculationHistory] 99999');
+        ->assertJsonPath(
+            'message',
+            'No query results for model [App\Models\CalculationHistory] 99999',
+        );
 });
 
 it('clears all history items', function () {
